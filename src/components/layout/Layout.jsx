@@ -9,13 +9,17 @@ import { getLocalStorage } from '../../utils/helpers';
 
 const Layout = ({ children }) => {
     const location = useLocation();
-    const [tickerConfig, setTickerConfig] = useState({ enabled: false, message: '' });
+    const [tickerConfig, setTickerConfig] = useState({ enabled: false, label: 'BREAKING NEWS', message: '' });
     const [isDonationModalOpen, setIsDonationModalOpen] = useState(false);
 
     useEffect(() => {
         const savedConfig = getLocalStorage('darkroom_ticker_config');
         if (savedConfig) {
-            setTickerConfig(savedConfig);
+            setTickerConfig({
+                enabled: savedConfig.enabled ?? false,
+                label: savedConfig.label ?? 'BREAKING NEWS',
+                message: savedConfig.message ?? ''
+            });
         }
     }, [location]);
 
@@ -28,7 +32,7 @@ const Layout = ({ children }) => {
             <Header onOpenDonation={openDonationModal} />
             <Navbar />
             <div className="mt-3">
-                <BreakingNewsTicker message={tickerConfig.message} enabled={tickerConfig.enabled} />
+                <BreakingNewsTicker label={tickerConfig.label} message={tickerConfig.message} enabled={tickerConfig.enabled} />
             </div>
             <main className="flex-1 bg-primary-white">
                 {children}
