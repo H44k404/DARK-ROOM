@@ -34,6 +34,16 @@ export default {
             backdropBlur: {
                 xs: '2px',
             },
+            animation: {
+                'marquee': 'marquee 30s linear infinite',
+                'marquee-fast': 'marquee 20s linear infinite',
+            },
+            keyframes: {
+                marquee: {
+                    '0%': { transform: 'translateX(0%)' },
+                    '100%': { transform: 'translateX(-50%)' },
+                },
+            },
         },
     },
     plugins: [],

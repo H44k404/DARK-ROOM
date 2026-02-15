@@ -28,12 +28,22 @@ const BreakingNewsTicker = ({ label, message, enabled }) => {
 
             {/* Ticker Content */}
             <div className="flex-1 h-full flex items-center overflow-hidden">
-                <div className="flex animate-marquee-fast h-full items-center">
-                    {[1, 2, 3, 4, 5, 6].map((i) => (
-                        <div key={i} className="flex items-center">
-                            {tickerContent}
-                        </div>
-                    ))}
+                <div className="flex animate-marquee-fast h-full items-center min-w-full">
+                    {/* We need two sets of content for the translateX(-50%) trick */}
+                    <div className="flex items-center shrink-0">
+                        {[1, 2, 3, 4].map((i) => (
+                            <React.Fragment key={`set1-${i}`}>
+                                {tickerContent}
+                            </React.Fragment>
+                        ))}
+                    </div>
+                    <div className="flex items-center shrink-0">
+                        {[1, 2, 3, 4].map((i) => (
+                            <React.Fragment key={`set2-${i}`}>
+                                {tickerContent}
+                            </React.Fragment>
+                        ))}
+                    </div>
                 </div>
             </div>
 
