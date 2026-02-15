@@ -1,0 +1,67 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                  Int      @id @default(autoincrement())
+  email               String   @unique
+  username            String   @unique
+  password            String
+  name                String?
+  role                String   @default("user") // super_admin, admin, editor, user
+  twoFactorEnabled    Boolean  @default(false)
+  twoFactorSecret     String?
+  resetPasswordToken  String?
+  resetPasswordExpires DateTime?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model Post {
+  id            Int      @id @default(autoincrement())
+  title         String
+  slug          String   @unique
+  excerpt       String?
+  content       String // HTML content
+  featuredImage String?
+  postType      String // article, video, audio
+  videoUrl      String? // For video posts
+  audioUrl      String? // For audio posts
+  status        String   @default("published") // draft, pending, published
+  viewCount     Int      @default(0)
+  publishedAt   DateTime? // Optional when not published
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  categoryId    Int
+  category      Category @relation(fields: [categoryId], references: [id])
+  images        PostImage[]
+}
+
+model PostImage {
+  id        Int      @id @default(autoincrement())
+  url       String
+  alt       String?
+  caption   String?
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String
+  slug      String   @unique
+  posts     Post[]
+}
+
+model Setting {
+  key       String   @id // e.g., "ticker", "donation"
+  value     String // JSON stringified
+  updatedAt DateTime @updatedAt
+}
