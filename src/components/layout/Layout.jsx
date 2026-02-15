@@ -31,7 +31,7 @@ const Layout = ({ children }) => {
         <div className="min-h-screen flex flex-col">
             <Header onOpenDonation={openDonationModal} />
             <Navbar />
-            <div className="mt-3">
+            <div>
                 <BreakingNewsTicker label={tickerConfig.label} message={tickerConfig.message} enabled={tickerConfig.enabled} />
             </div>
             <main className="flex-1 bg-primary-white">
