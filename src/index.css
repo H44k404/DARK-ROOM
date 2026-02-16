@@ -418,7 +418,7 @@
   opacity: 0.7;
 }
 
-@keyframes scroll-left {
+@keyframes marquee-scroll {
   0% {
     transform: translateX(0);
   }
@@ -426,4 +426,10 @@
   100% {
     transform: translateX(-50%);
   }
+}
+
+.animate-marquee-fast-robust {
+  animation: marquee-scroll 60s linear infinite;
+  display: flex !important;
+  width: max-content !important;
 }

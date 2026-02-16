@@ -13,8 +13,8 @@ const __dirname = path.dirname(__filename);
 import authRoutes from './server/routes/authRoutes.js';
 import youtubeRoutes from './server/routes/youtubeRoutes.js';
 import postRoutes from './server/routes/postRoutes.js';
-import userRoutes from './routes/userRoutes.js';
-import settingsRoutes from './routes/settingsRoutes.js'; // Added settings routes import
+import userRoutes from './server/routes/userRoutes.js';
+import settingsRoutes from './server/routes/settingsRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;

@@ -121,3 +121,14 @@ export const deletePost = async (req, res) => {
         res.status(500).json({ message: 'Error deleting post', error: error.message });
     }
 };
+
+export const getCategories = async (req, res) => {
+    try {
+        const categories = await prisma.category.findMany({
+            orderBy: { name: 'asc' }
+        });
+        res.json(categories);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching categories', error: error.message });
+    }
+};

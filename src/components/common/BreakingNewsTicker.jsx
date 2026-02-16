@@ -25,22 +25,24 @@ const BreakingNewsTicker = ({ label, message, enabled }) => {
 
     return (
         <div className="relative w-full overflow-hidden bg-black h-12 flex items-center shadow-[0_10px_30px_rgba(0,0,0,0.5)] border-b border-white/5">
-            {/* Ticker Content - Using w-max and flex-nowrap for seamlessness */}
-            <div className="flex animate-marquee-fast h-full items-center w-max">
-                {/* Two identical sets for seamless translateX(-50%) loop */}
-                <div className="flex items-center shrink-0 px-6 gap-12">
-                    {[...Array(6)].map((_, i) => (
-                        <React.Fragment key={`set1-${i}`}>
-                            {tickerContent}
-                        </React.Fragment>
-                    ))}
-                </div>
-                <div className="flex items-center shrink-0 px-6 gap-12">
-                    {[...Array(6)].map((_, i) => (
-                        <React.Fragment key={`set2-${i}`}>
-                            {tickerContent}
-                        </React.Fragment>
-                    ))}
+            {/* Ticker Content - Using robust CSS animation */}
+            <div className="flex-1 h-full flex items-center overflow-hidden">
+                <div className="animate-marquee-fast-robust h-full flex items-center">
+                    {/* Two identical sets for seamless translateX(-50%) loop */}
+                    <div className="flex items-center shrink-0 px-6 gap-12">
+                        {[...Array(6)].map((_, i) => (
+                            <React.Fragment key={`set1-${i}`}>
+                                {tickerContent}
+                            </React.Fragment>
+                        ))}
+                    </div>
+                    <div className="flex items-center shrink-0 px-6 gap-12">
+                        {[...Array(6)].map((_, i) => (
+                            <React.Fragment key={`set2-${i}`}>
+                                {tickerContent}
+                            </React.Fragment>
+                        ))}
+                    </div>
                 </div>
             </div>
 
