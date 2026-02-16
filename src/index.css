@@ -189,7 +189,7 @@
   }
 
   .post-content img {
-    @apply w-full h-auto rounded-sm my-6;
+    @apply max-w-[85%] h-auto rounded-sm my-8 mx-auto block shadow-sm;
   }
 
   .post-content a {
@@ -295,14 +295,14 @@
 
 /* Rich Text Editor Styles */
 .rich-text-editor .ql-container {
-  min-height: 300px;
+  min-height: 500px;
   font-size: 16px;
   font-family: inherit;
 }
 
 .rich-text-editor .ql-editor {
-  min-height: 300px;
-  padding: 16px;
+  min-height: 500px;
+  padding: 32px;
 }
 
 .rich-text-editor .ql-editor p {
@@ -359,10 +359,23 @@
 }
 
 .post-content img {
-  max-width: 100%;
+  max-width: 85%;
   height: auto;
-  margin: 24px 0;
+  margin: 32px auto;
+  display: block;
   border-radius: 4px;
+}
+
+.post-content-serif {
+  font-family: 'Inter', serif;
+  /* Fallback will be handled by @layer base or specific overrides */
+  font-feature-settings: 'liga' 1, 'calt' 1;
+}
+
+/* Specific Serif Override for News Content */
+.post-content-serif p,
+.post-content-serif div {
+  font-family: 'Inter', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
 .post-content a {

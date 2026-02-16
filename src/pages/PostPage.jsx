@@ -119,7 +119,7 @@ const PostPage = () => {
 
                         {/* Post Content */}
                         <div
-                            className="post-content max-w-4xl mb-8"
+                            className="post-content post-content-serif max-w-4xl mb-8 text-sinhala"
                             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
                         />
 

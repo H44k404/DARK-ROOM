@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import postService from '../../services/postService';
 import { useAuth } from '../../context/AuthContext';
 import RichTextEditor from '../../components/admin/RichTextEditor';
-import { HiPlusCircle, HiArrowLeft, HiCloudUpload, HiGlobe, HiVideoCamera, HiMusicNote, HiPhotograph } from 'react-icons/hi';
+import { HiPlusCircle, HiArrowLeft, HiCloudUpload, HiGlobe, HiVideoCamera, HiMusicNote, HiPhotograph, HiX } from 'react-icons/hi';
 
 const CreatePost = () => {
     const navigate = useNavigate();
@@ -191,7 +191,7 @@ const CreatePost = () => {
 
                                 {/* Content Render */}
                                 <div
-                                    className="prose prose-lg max-w-none text-gray-700 leading-relaxed font-serif"
+                                    className="post-content post-content-serif prose prose-lg max-w-none text-gray-700 leading-relaxed font-serif text-sinhala"
                                     dangerouslySetInnerHTML={{ __html: formData.content || '<p class="text-gray-300 italic">Content body will be rendered here...</p>' }}
                                 />
                             </div>
@@ -262,15 +262,49 @@ const CreatePost = () => {
                             </div>
 
                             <div>
-                                <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-tight mb-2">Source URL</label>
-                                <textarea
-                                    name="featuredImage"
-                                    value={formData.featuredImage}
-                                    onChange={handleChange}
-                                    rows="2"
-                                    className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-xs font-mono text-primary-black focus:ring-primary-black"
-                                    placeholder="https://images.unsplash.com/..."
-                                />
+                                <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-tight mb-2">Featured Media</label>
+
+                                {formData.featuredImage ? (
+                                    <div className="relative group rounded-xl overflow-hidden border border-gray-100 bg-gray-50">
+                                        <img
+                                            src={formData.featuredImage}
+                                            alt="Featured"
+                                            className="w-full aspect-[16/9] object-cover transition-all group-hover:scale-105"
+                                        />
+                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const newUrl = prompt('Enter new image URL:', formData.featuredImage);
+                                                    if (newUrl !== null) setFormData({ ...formData, featuredImage: newUrl });
+                                                }}
+                                                className="p-2 bg-white text-primary-black rounded-lg text-sm font-bold shadow-lg transform hover:scale-110 transition-transform"
+                                            >
+                                                Replace Image
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setFormData({ ...formData, featuredImage: '' })}
+                                                className="p-2 bg-red-600 text-white rounded-lg text-sm font-bold shadow-lg transform hover:scale-110 transition-transform flex items-center gap-1"
+                                            >
+                                                <HiX className="text-lg" />
+                                                Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-4">
+                                        <textarea
+                                            name="featuredImage"
+                                            value={formData.featuredImage}
+                                            onChange={handleChange}
+                                            rows="2"
+                                            className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-xs font-mono text-primary-black focus:ring-primary-black"
+                                            placeholder="Paste image URL (e.g. https://images.unsplash.com/...)"
+                                        />
+                                        <p className="text-[10px] text-gray-400 italic">Enter a valid URL to see a preview and manage media.</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
