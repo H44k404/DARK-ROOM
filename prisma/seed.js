@@ -15,20 +15,6 @@ const prisma = new PrismaClient({
 async function main() {
     console.log('Start seeding ...');
 
-    // Admin User
-    const adminPassword = await bcrypt.hash('admin123', 10);
-    const admin = await prisma.user.upsert({
-        where: { email: 'admin@darkroom.lk' },
-        update: {},
-        create: {
-            email: 'admin@darkroom.lk',
-            username: 'admin',
-            password: adminPassword,
-            name: 'Super Admin',
-            role: 'super_admin'
-        },
-    });
-
     // Categories
     const categories = [
         { name: 'Sri Lanka', slug: 'sri-lanka' },
@@ -38,12 +24,32 @@ async function main() {
         { name: 'Other', slug: 'other' }
     ];
 
+    console.log('Seeding categories...');
     for (const cat of categories) {
         await prisma.category.upsert({
             where: { slug: cat.slug },
             update: {},
             create: cat
         });
+    }
+
+    // Admin User
+    console.log('Seeding admin user...');
+    const adminPassword = await bcrypt.hash('admin123', 10);
+    try {
+        await prisma.user.upsert({
+            where: { email: 'admin@darkroom.lk' },
+            update: {},
+            create: {
+                email: 'admin@darkroom.lk',
+                username: 'admin',
+                password: adminPassword,
+                name: 'Super Admin',
+                role: 'super_admin'
+            },
+        });
+    } catch (err) {
+        console.log('Admin user might already exist with a different email or username, skipping.');
     }
 
     // Default Settings (Ticker, Donation)

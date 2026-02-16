@@ -21,6 +21,7 @@ const CreatePost = () => {
         videoId: '',
         audioId: '',
     });
+    const [showPreview, setShowPreview] = useState(false);
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState('');
@@ -90,7 +91,16 @@ const CreatePost = () => {
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
-                    <span className="text-xs font-bold text-gray-300 uppercase tracking-widest hidden md:inline">Auto-saving...</span>
+                    <button
+                        type="button"
+                        onClick={() => setShowPreview(!showPreview)}
+                        className={`px-6 py-2 rounded-2xl font-bold transition-all border ${showPreview
+                            ? 'bg-primary-black text-white border-primary-black'
+                            : 'bg-white text-primary-black border-gray-200 hover:border-primary-black'
+                            }`}
+                    >
+                        {showPreview ? 'Edit Content' : 'Live Preview'}
+                    </button>
                     <button
                         type="submit"
                         disabled={loading}
@@ -121,14 +131,18 @@ const CreatePost = () => {
                     <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-8 space-y-8">
                         <div>
                             <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Post Headline</label>
-                            <input
-                                type="text"
+                            <textarea
                                 name="title"
                                 value={formData.title}
                                 onChange={handleChange}
                                 required
-                                className="w-full text-2xl md:text-3xl font-bold tracking-tight text-primary-black border-none bg-transparent placeholder-gray-200 focus:ring-0 px-0"
-                                placeholder="THE LATEST DEVELOPMENTS..."
+                                rows="3"
+                                className="w-full text-2xl md:text-3xl font-bold tracking-tight text-primary-black border-none bg-transparent placeholder-gray-200 focus:ring-0 px-0 resize-none overflow-hidden"
+                                placeholder="ENTER THE LATEST DEVELOPMENTS HERE..."
+                                onInput={(e) => {
+                                    e.target.style.height = 'auto';
+                                    e.target.style.height = e.target.scrollHeight + 'px';
+                                }}
                             />
                         </div>
 
@@ -143,6 +157,46 @@ const CreatePost = () => {
                             </div>
                         </div>
                     </div>
+
+                    {showPreview && (
+                        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden animate-slide-in">
+                            <div className="bg-gray-50 px-8 py-4 border-b border-gray-100 flex justify-between items-center">
+                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Live Website Preview</span>
+                                <span className="px-2 py-1 bg-primary-black text-white text-[9px] font-bold rounded uppercase tracking-tighter">Live Concept</span>
+                            </div>
+                            <div className="p-8 space-y-6">
+                                {/* Category Badge */}
+                                {formData.categoryId && (
+                                    <span className="inline-block px-3 py-1 bg-primary-black text-white text-[10px] font-bold uppercase tracking-widest">
+                                        {categories.find(c => c.id === parseInt(formData.categoryId))?.name || 'Channel'}
+                                    </span>
+                                )}
+
+                                {/* Headline */}
+                                <h2 className="text-4xl md:text-6xl font-bold text-primary-black leading-[0.9] tracking-tighter">
+                                    {formData.title || 'YOUR HEADLINE WILL APPEAR HERE'}
+                                </h2>
+
+                                {/* Featured Image */}
+                                {formData.featuredImage && (
+                                    <div className="aspect-[16/9] w-full bg-gray-100 overflow-hidden rounded-xl border border-gray-100">
+                                        <img
+                                            src={formData.featuredImage}
+                                            alt="Preview"
+                                            className="w-full h-full object-cover"
+                                            onError={(e) => e.target.style.display = 'none'}
+                                        />
+                                    </div>
+                                )}
+
+                                {/* Content Render */}
+                                <div
+                                    className="prose prose-lg max-w-none text-gray-700 leading-relaxed font-serif"
+                                    dangerouslySetInnerHTML={{ __html: formData.content || '<p class="text-gray-300 italic">Content body will be rendered here...</p>' }}
+                                />
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Sidebar Configuration Section */}

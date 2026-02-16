@@ -1,5 +1,13 @@
 import express from 'express';
-import { loginUser, getMe, registerUser } from '../controllers/authController.js';
+import {
+    loginUser,
+    getMe,
+    registerUser,
+    setup2FA,
+    verify2FA,
+    forgotPassword,
+    resetPassword
+} from '../controllers/authController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -15,3 +23,5 @@ router.post('/verify-2fa', protect, verify2FA);
 // Password Reset Routes
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password/:token', resetPassword);
+
+export default router;

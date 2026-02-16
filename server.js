@@ -22,7 +22,8 @@ const PORT = process.env.PORT || 5000;
 // Security Middleware
 app.use(helmet()); // Secure HTTP headers
 app.use(cors()); // Allow Cross-Origin requests
-app.use(express.json()); // Parse JSON bodies
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Rate Limiting
 const limiter = rateLimit({
