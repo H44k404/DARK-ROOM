@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Dark Room Server Setup Script (Separated Architecture)
+# Dark Room Server Setup Script (Frontend/Backend folders)
 
 set -e # Exit on error
 
@@ -16,21 +16,29 @@ sudo apt install -y nodejs nginx
 echo "⚙️ Installing PM2..."
 sudo npm install -g pm2
 
-# 3. Backend Setup
+# 3. Setup Project Structure
+# We assume the repo structure is:
+# /deployment
+# /frontend
+# /backend
+
+# 4. Backend Setup
 echo "🔙 Setting up Backend..."
-# Assume we are in the project root
+cd backend
 npm install
 # Generate Prisma Client
 npx prisma generate
-# Push Database Schema
+# Push Database Schema (in backend dir)
 if [ ! -f "prod.db" ]; then
     echo "🗄️ Initializing SQLite DB..."
     touch prod.db
 fi
 npx prisma db push
 
-# 4. Frontend Setup
+# 5. Frontend Setup
 echo "frontend Setting up Frontend..."
+cd ../frontend
+npm install
 echo "🏗️ Building React App..."
 npm run build
 
@@ -39,17 +47,21 @@ sudo mkdir -p /var/www/darkroom
 sudo rm -rf /var/www/darkroom/*
 sudo cp -r dist/* /var/www/darkroom/
 
-# 5. Configure Nginx
+# 6. Configure Nginx
 echo "🌐 Configuring Nginx..."
+cd .. # Back to root
 sudo cp deployment/nginx.conf /etc/nginx/sites-available/default
 # Set permissions for uploads folder (so Nginx can read it)
-chmod 755 /home/ubuntu/dark-room/uploads || true
+# Make sure backend uploads folder exists
+mkdir -p backend/uploads
+chmod 755 backend/uploads || true
 
 echo "🔄 Restarting Nginx..."
 sudo nginx -t
 sudo systemctl restart nginx
 
-# 6. Backend Env Setup
+# 7. Backend Env Setup
+cd backend
 if [ ! -f .env ]; then
     echo "⚠️ Setup .env file..."
     cat > .env << EOL
@@ -62,7 +74,7 @@ EOL
     echo "✅ Created .env template."
 fi
 
-# 7. Start Backend
+# 8. Start Backend
 echo "🚀 Starting Backend with PM2..."
 pm2 delete darkroom 2>/dev/null || true
 pm2 start server.js --name darkroom --env production
