@@ -79,13 +79,25 @@ const Profile = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            setFormData(prev => ({ ...prev, profileImage: response.url }));
+            setFormData(prev => ({ ...prev, profileImage: response.data?.url || response.url }));
             setSuccess('Image uploaded successfully!');
         } catch (err) {
             console.error('Upload failed:', err);
             setError('Failed to upload image. Please try again.');
         } finally {
             setUploading(false);
+        }
+    };
+
+    const handleRemoveProfilePhoto = (e) => {
+        try {
+            e.stopPropagation();
+            setFormData(prev => ({ ...prev, profileImage: '' }));
+            setShowImageOptions(false);
+            setSuccess('Photo removed. Click Save Changes to confirm.');
+        } catch (err) {
+            console.error('Error removing photo:', err);
+            setError('Failed to remove photo.');
         }
     };
 
@@ -146,21 +158,27 @@ const Profile = () => {
                 name: formData.name,
                 email: formData.email,
                 bio: formData.bio,
-                profileImage: formData.profileImage,
+                profileImage: formData.profileImage || null, // Explicitly set to null if empty
             };
 
             if (formData.password) {
                 updateData.password = formData.password;
             }
 
-            const updatedUser = await api.put('/users/profile', updateData);
+            const response = await api.put('/users/profile', updateData);
+            const updatedUser = response.data || response;
             updateUser(updatedUser); // Update global auth state
             setSuccess('Profile updated successfully!');
 
-            // Optionally update global auth state if name/email changed
-            // This depends on how AuthContext is implemented, assuming a page refresh might be easiest or if login() can update state without full auth flow
+            // Clear password fields after successful update
+            setFormData(prev => ({
+                ...prev,
+                password: '',
+                confirmPassword: ''
+            }));
         } catch (err) {
-            setError(err.message || 'Failed to update profile');
+            console.error('Profile update error:', err);
+            setError(err.response?.data?.message || err.message || 'Failed to update profile');
         } finally {
             setSaving(false);
         }
@@ -293,11 +311,7 @@ const Profile = () => {
                                             {formData.profileImage && (
                                                 <button
                                                     type="button"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        setFormData({ ...formData, profileImage: '' });
-                                                        setShowImageOptions(false);
-                                                    }}
+                                                    onClick={handleRemoveProfilePhoto}
                                                     className="w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 flex items-center gap-3 transition-colors"
                                                 >
                                                     <HiTrash className="text-lg" />

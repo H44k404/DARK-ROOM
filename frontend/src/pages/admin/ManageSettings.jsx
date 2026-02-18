@@ -11,9 +11,8 @@ const ManageSettings = () => {
             contactEmail: 'contact@darkroom.lk',
             phoneNumber: '+94 11 234 5678'
         },
-        paypal: { enabled: false, email: '', link: '' },
         bank: { enabled: false, bankName: '', accountName: '', accountNumber: '', branch: '', swiftCode: '', bankCountry: '', iban: '' },
-        crypto: { enabled: false, btcAddress: '', ethAddress: '', usdtAddress: '', binancePayId: '' }
+        crypto: { enabled: false, btcAddress: '', ethAddress: '', binancePayId: '', solanaAddress: '' }
     });
     const [loading, setLoading] = useState(true);
     const [saveStatus, setSaveStatus] = useState(null); // 'saving', 'success', 'error'
@@ -46,7 +45,6 @@ const ManageSettings = () => {
         setTimeout(() => {
             setLocalStorage('darkroom_general_config', config.site);
             setLocalStorage('darkroom_donation_config', {
-                paypal: config.paypal,
                 bank: config.bank,
                 crypto: config.crypto
             });
@@ -126,51 +124,7 @@ const ManageSettings = () => {
 
             {user?.role === 'super_admin' && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    {/* PayPal Settings */}
-                    <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden flex flex-col group">
-                        <div className="bg-gray-50/50 px-8 py-6 border-b border-gray-50 flex items-center justify-between transition-colors group-hover:bg-blue-50/30">
-                            <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-blue-600 shadow-sm">
-                                    <HiCreditCard className="text-xl" />
-                                </div>
-                                <h2 className="text-lg font-bold text-primary-black tracking-tight">PayPal Gateway</h2>
-                            </div>
-                            <label className="flex items-center gap-3 cursor-pointer">
-                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none">Status</span>
-                                <div className={`w-12 h-6 rounded-full transition-all duration-300 relative ${config.paypal.enabled ? 'bg-blue-600' : 'bg-gray-200'}`}>
-                                    <input
-                                        type="checkbox"
-                                        checked={config.paypal.enabled}
-                                        onChange={(e) => handleChange('paypal', 'enabled', e.target.checked)}
-                                        className="sr-only"
-                                    />
-                                    <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full shadow-sm transition-all duration-300 transform ${config.paypal.enabled ? 'translate-x-6' : 'translate-x-0'}`}></div>
-                                </div>
-                            </label>
-                        </div>
-                        <div className="p-8 space-y-6 flex-1">
-                            <div>
-                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2.5">Merchant Email</label>
-                                <input
-                                    type="text"
-                                    value={config.paypal.email}
-                                    onChange={(e) => handleChange('paypal', 'email', e.target.value)}
-                                    className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl px-5 py-3.5 text-sm font-semibold text-primary-black focus:ring-2 ring-blue-50 transition-all"
-                                    placeholder="paypal@example.com"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2.5">Direct me Link</label>
-                                <input
-                                    type="text"
-                                    value={config.paypal.link}
-                                    onChange={(e) => handleChange('paypal', 'link', e.target.value)}
-                                    className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl px-5 py-3.5 text-sm font-semibold text-primary-black focus:ring-2 ring-blue-50 transition-all font-mono"
-                                    placeholder="https://paypal.me/yourname"
-                                />
-                            </div>
-                        </div>
-                    </div>
+
 
                     {/* Crypto Settings */}
                     <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden flex flex-col group">
@@ -220,6 +174,15 @@ const ManageSettings = () => {
                                     value={config.crypto.binancePayId}
                                     onChange={(e) => handleChange('crypto', 'binancePayId', e.target.value)}
                                     className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl px-5 py-3.5 text-sm font-semibold text-primary-black focus:ring-2 ring-yellow-50 transition-all"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2.5">Solana Address (SOL)</label>
+                                <input
+                                    type="text"
+                                    value={config.crypto.solanaAddress}
+                                    onChange={(e) => handleChange('crypto', 'solanaAddress', e.target.value)}
+                                    className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl px-5 py-3.5 text-xs font-mono text-primary-black focus:ring-2 ring-yellow-50 transition-all"
                                 />
                             </div>
                         </div>

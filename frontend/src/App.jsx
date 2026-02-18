@@ -27,6 +27,11 @@ import ManageTicker from './pages/admin/ManageTicker';
 import ManageSettings from './pages/admin/ManageSettings';
 import SecuritySettings from './pages/admin/SecuritySettings';
 
+// Suppress DevTools metrics reporter error
+if (!window.__chromium_devtools_metrics_reporter) {
+  window.__chromium_devtools_metrics_reporter = () => {};
+}
+
 // Scroll to top on route change
 function ScrollToTop() {
   const { pathname } = useLocation();

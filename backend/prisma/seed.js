@@ -76,7 +76,6 @@ async function main() {
         create: {
             key: 'donation',
             value: JSON.stringify({
-                paypal: { enabled: true, email: 'donate@darkroom.lk', link: 'https://paypal.me/darkroomlk' },
                 bank: { enabled: true, bankName: 'Commercial Bank of Ceylon', accountName: 'Dark Room Media', accountNumber: '8123456789', branch: 'Colombo Main' },
                 crypto: { enabled: true, btcAddress: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa', usdtAddress: 'TXTuYtXbK2GqJzQ...' }
             })

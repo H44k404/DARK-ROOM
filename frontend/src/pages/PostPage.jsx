@@ -145,12 +145,7 @@ const PostPage = () => {
                             </div>
                         )}
 
-                        {/* Audio Player (for audio posts) */}
-                        {post.postType === 'audio' && post.audioId && (
-                            <div className="mb-8">
-                                <AudioPlayer audioId={post.audioId} title={post.title} />
-                            </div>
-                        )}
+
 
                         {/* Share Buttons */}
                         <div className="mb-8 pb-8 border-b border-primary-gray-200">
@@ -162,6 +157,13 @@ const PostPage = () => {
                             className="post-content post-content-serif mb-8 text-sinhala break-words"
                             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
                         />
+
+                        {/* Audio Player (for audio posts or articles with audio) - Moved after content */}
+                        {post.audioUrl && (
+                            <div className="mb-8">
+                                <AudioPlayer audioId={extractYouTubeID(post.audioUrl)} title={post.title} />
+                            </div>
+                        )}
 
                         {/* In-Content Ad - Medium Rectangle */}
                         <div className="my-8">

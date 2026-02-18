@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { HiLightningBolt, HiShieldCheck, HiChevronRight, HiCreditCard, HiLibrary, HiCurrencyDollar, HiCheckCircle } from 'react-icons/hi';
-import { FaPaypal, FaCcVisa, FaCcMastercard } from 'react-icons/fa';
+import { HiLightningBolt, HiShieldCheck, HiLibrary, HiCurrencyDollar } from 'react-icons/hi';
 import { getLocalStorage } from '../utils/helpers';
 
 const DonationPage = () => {
-    const [activeTab, setActiveTab] = useState('paypal');
+    const [activeTab, setActiveTab] = useState('bank');
     const [config, setConfig] = useState(null);
 
     useEffect(() => {
@@ -13,7 +12,6 @@ const DonationPage = () => {
     }, []);
 
     const navItems = [
-        { id: 'paypal', label: 'PayPal / Cards', sub: 'Instant Global Payment', icon: HiCreditCard },
         { id: 'bank', label: 'Bank Transfer', sub: 'Institutional Support', icon: HiLibrary },
         { id: 'crypto', label: 'Digital Assets', sub: 'Decentralized Ledger', icon: HiCurrencyDollar },
     ];
@@ -58,8 +56,8 @@ const DonationPage = () => {
                                         key={item.id}
                                         onClick={() => setActiveTab(item.id)}
                                         className={`w-full group flex items-start gap-5 p-6 rounded-2xl transition-all text-left ${activeTab === item.id
-                                                ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-500/20 translate-x-1'
-                                                : 'hover:bg-slate-800 text-slate-400 hover:text-white'
+                                            ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-500/20 translate-x-1'
+                                            : 'hover:bg-slate-800 text-slate-400 hover:text-white'
                                             }`}
                                     >
                                         <item.icon className={`text-3xl shrink-0 ${activeTab === item.id ? 'text-white' : 'text-slate-600 group-hover:text-indigo-400 transition-colors'}`} />
@@ -91,65 +89,7 @@ const DonationPage = () => {
                     {/* Main Content Area */}
                     <div className="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-[2.5rem] p-8 md:p-16 shadow-2xl shadow-indigo-500/5 min-h-[700px] relative overflow-hidden">
                         <div className="relative z-10">
-                            {activeTab === 'paypal' && (
-                                <div className="space-y-12 animate-in fade-in slide-in-from-right-8 duration-500">
-                                    <div className="space-y-4">
-                                        <div className="inline-block px-3 py-1 bg-indigo-500/10 text-indigo-400 text-[10px] font-bold tracking-widest uppercase rounded-lg border border-indigo-500/10">
-                                            Instant Clearing
-                                        </div>
-                                        <h2 className="text-5xl md:text-6xl font-extrabold text-white tracking-tighter leading-tight">
-                                            Merchant Checkout
-                                        </h2>
-                                        <p className="text-xl font-medium text-slate-400 max-w-xl">
-                                            Quickly authorize your support through our global PayPal integration or credit card gateways.
-                                        </p>
-                                    </div>
 
-                                    <div className="flex flex-wrap items-center gap-6">
-                                        {[
-                                            { icon: FaPaypal, color: '#003087' },
-                                            { icon: FaCcVisa, color: '#1A1F71' },
-                                            { icon: FaCcMastercard, color: '#EB001B' }
-                                        ].map((brand, i) => (
-                                            <div key={i} className="bg-white p-5 rounded-3xl shadow-lg border border-slate-200/5 hover:scale-105 transition-transform">
-                                                <brand.icon className="text-5xl" style={{ color: brand.color }} />
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    {config.paypal?.enabled ? (
-                                        <div className="space-y-8 pt-8">
-                                            <a
-                                                href={config.paypal.link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-4 bg-indigo-600 text-white px-12 py-6 rounded-3xl font-bold text-xl hover:bg-indigo-500 transition-all shadow-2xl shadow-indigo-500/30 group active:scale-95"
-                                            >
-                                                Authorize Now
-                                                <HiChevronRight className="text-2xl transition-transform group-hover:translate-x-2" />
-                                            </a>
-                                            <div className="flex flex-wrap gap-8 items-center pt-10 border-t border-slate-800 text-slate-500 font-bold text-xs tracking-widest uppercase">
-                                                <div className="flex items-center gap-2">
-                                                    <HiCheckCircle className="text-indigo-500 text-lg" />
-                                                    SSL Security
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    <HiCheckCircle className="text-indigo-500 text-lg" />
-                                                    Fraud Protected
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    <HiCheckCircle className="text-indigo-500 text-lg" />
-                                                    Direct Clearing
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className="p-16 bg-slate-950 border border-slate-800 rounded-3xl text-center">
-                                            <p className="text-xl font-bold text-slate-500 uppercase tracking-widest">Gateway Off-Peak</p>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
 
                             {activeTab === 'bank' && (
                                 <div className="space-y-12 animate-in fade-in slide-in-from-right-8 duration-500">

@@ -315,6 +315,22 @@ const CreatePost = () => {
                                     </div>
                                 )}
 
+                                {/* Audio URL Input - Available for all types (or specifically when needed) */}
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Audio URL (YouTube)</label>
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="text"
+                                            name="audioUrl"
+                                            value={formData.audioUrl}
+                                            onChange={handleChange}
+                                            className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-black focus:border-black"
+                                            placeholder="https://www.youtube.com/watch?v=..."
+                                        />
+                                    </div>
+                                    <p className="text-[10px] text-gray-400 mt-1">Add a YouTube link to embed as an audio player.</p>
+                                </div>
+
                                 <div>
                                     <ImageUpload
                                         label={formData.postType === 'video' ? 'Video Thumbnail (Optional)' : 'Featured Image'}
@@ -373,6 +389,24 @@ const CreatePost = () => {
                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                             allowFullScreen
                                         ></iframe>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Audio Preview */}
+                            {formData.audioUrl && (
+                                <div className="mb-8">
+                                    <div className="relative w-full bg-gray-100 rounded-sm overflow-hidden p-4">
+                                        <div className="flex items-center gap-4">
+                                            <div className="h-12 w-12 bg-gray-800 rounded-full flex items-center justify-center text-white">
+                                                <HiMusicNote />
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="text-xs font-bold uppercase text-gray-500 mb-1">Audio Preview</div>
+                                                <div className="text-sm font-medium truncate">{formData.audioUrl}</div>
+                                            </div>
+                                        </div>
+                                        {/* We could embed the actual player here too if desired, but a placeholder is safer for performace in edit mode */}
                                     </div>
                                 </div>
                             )}
