@@ -31,3 +31,10 @@ yarn-error.log*
 db.sqlite
 db.sqlite-journal
 /public/uploads
+/uploads
+
+# Database
+dev.db
+*.db
+*.db-shm
+*.db-wal

@@ -107,3 +107,125 @@ export const deleteStaffMember = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// @desc    Get current user profile
+// @route   GET /api/users/profile
+// @access  Private
+export const getUserProfile = async (req, res) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: req.user.id },
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                name: true,
+                role: true,
+                bio: true,
+                profileImage: true,
+                designation: true,
+                createdAt: true
+            }
+        });
+
+        if (user) {
+            res.json(user);
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Update user profile
+// @route   PUT /api/users/profile
+// @access  Private
+export const updateUserProfile = async (req, res) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: req.user.id }
+        });
+
+        if (user) {
+            user.name = req.body.name || user.name;
+            user.bio = req.body.bio || user.bio;
+            user.profileImage = req.body.profileImage || user.profileImage;
+
+            // Allow email update, but check for uniqueness if changed
+            if (req.body.email && req.body.email !== user.email) {
+                const emailExists = await prisma.user.findUnique({ where: { email: req.body.email } });
+                if (emailExists) {
+                    res.status(400);
+                    throw new Error('Email already in use');
+                }
+                user.email = req.body.email;
+            }
+
+            if (req.body.password) {
+                const salt = await bcrypt.genSalt(10);
+                user.password = await bcrypt.hash(req.body.password, salt);
+            }
+
+            const updatedUser = await prisma.user.update({
+                where: { id: req.user.id },
+                data: {
+                    name: user.name,
+                    email: user.email,
+                    bio: user.bio,
+                    profileImage: user.profileImage,
+                    password: user.password
+                },
+                select: {
+                    id: true,
+                    username: true,
+                    email: true,
+                    name: true,
+                    role: true,
+                    bio: true,
+                    profileImage: true,
+                    designation: true
+                }
+            });
+
+            res.json(updatedUser);
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Update user role (Super Admin only)
+// @route   PUT /api/users/:id/role
+// @access  Private (Super Admin)
+export const updateUserRole = async (req, res) => {
+    try {
+        if (req.user.role !== 'super_admin') {
+            return res.status(403).json({ message: 'Access denied' });
+        }
+
+        const { id } = req.params;
+        const { role, designation } = req.body;
+
+        const updatedUser = await prisma.user.update({
+            where: { id: parseInt(id) },
+            data: {
+                role,
+                designation
+            },
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                role: true,
+                designation: true
+            }
+        });
+
+        res.json(updatedUser);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

@@ -21,7 +21,8 @@ import AdminLogin from './pages/auth/AdminLogin';
 import Dashboard from './pages/admin/Dashboard';
 import CreatePost from './pages/admin/CreatePost';
 import ManagePosts from './pages/admin/ManagePosts';
-import UserManagement from './pages/admin/UserManagement';
+import ManageUsers from './pages/admin/ManageUsers';
+import Profile from './pages/admin/Profile';
 import ManageTicker from './pages/admin/ManageTicker';
 import ManageSettings from './pages/admin/ManageSettings';
 import SecuritySettings from './pages/admin/SecuritySettings';
@@ -93,6 +94,16 @@ function App() {
             }
           />
           <Route
+            path="/admin/edit-post/:id"
+            element={
+              <ProtectedRoute requiredRole="any_admin">
+                <AdminLayout>
+                  <CreatePost />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/admin/manage-posts"
             element={
               <ProtectedRoute requiredRole="any_admin">
@@ -127,7 +138,17 @@ function App() {
             element={
               <ProtectedRoute requiredRole="super_admin">
                 <AdminLayout>
-                  <UserManagement />
+                  <ManageUsers />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/profile"
+            element={
+              <ProtectedRoute requiredRole="any_admin">
+                <AdminLayout>
+                  <Profile />
                 </AdminLayout>
               </ProtectedRoute>
             }

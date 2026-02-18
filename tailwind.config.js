@@ -8,6 +8,7 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Noto Sans Sinhala', 'Inter', 'sans-serif'],
+                'serif-sinhala': ['Noto Serif Sinhala', 'serif'],
             },
             colors: {
                 primary: {

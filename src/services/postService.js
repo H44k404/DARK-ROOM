@@ -17,8 +17,16 @@ export const postService = {
         return api.get(`/posts/slug/${slug}`);
     },
 
+    getPostById: (id) => {
+        return api.get(`/posts/${id}`);
+    },
+
     getCategories: () => {
         return api.get('/posts/categories');
+    },
+
+    getStats: () => {
+        return api.get('/posts/stats');
     },
 
     createPost: (postData) => {

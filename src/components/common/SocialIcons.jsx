@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaFacebook, FaYoutube, FaTiktok } from 'react-icons/fa';
+import { FaFacebook, FaYoutube, FaTiktok, FaWhatsapp } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 
 const SocialIcons = ({ className = '' }) => {
@@ -8,26 +8,32 @@ const SocialIcons = ({ className = '' }) => {
         {
             name: 'Facebook',
             icon: FaFacebook,
-            url: 'https://facebook.com/darkroom',
+            url: 'https://www.facebook.com/Darkroom94',
             ariaLabel: 'Visit our Facebook page',
         },
         {
             name: 'YouTube',
             icon: FaYoutube,
-            url: 'https://youtube.com/@darkroom',
+            url: 'https://www.youtube.com/@darkroomnews',
             ariaLabel: 'Visit our YouTube channel',
         },
         {
             name: 'TikTok',
             icon: FaTiktok,
-            url: 'https://tiktok.com/@darkroom',
+            url: 'https://www.tiktok.com/@dark.room84?is_from_webapp=1&sender_device=pc',
             ariaLabel: 'Follow us on TikTok',
         },
         {
             name: 'X (Twitter)',
             icon: FaXTwitter,
-            url: 'https://x.com/darkroom',
+            url: 'https://x.com/darkr66913?s=21',
             ariaLabel: 'Follow us on X (Twitter)',
+        },
+        {
+            name: 'WhatsApp',
+            icon: FaWhatsapp,
+            url: 'https://whatsapp.com/channel/0029VbBjkZm89ina3UB2SB3e',
+            ariaLabel: 'Join our WhatsApp Channel',
         },
     ];
 

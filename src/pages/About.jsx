@@ -14,7 +14,7 @@ const About = () => {
 
                 <div className="prose prose-lg max-w-none space-y-6 text-primary-gray-800">
                     <p className="text-xl leading-relaxed">
-                        Dark Room is your trusted source for comprehensive news coverage from Sri Lanka and around the world. We are committed to delivering accurate, timely, and unbiased journalism in both Sinhala and English.
+                        Dark Room exposes the stories others try to hide. We exist to cut through the noise and bring you raw, uncompromising reporting from every dark corner of the globe. Reality needs no filter.
                     </p>
 
                     <h2 className="text-2xl md:text-3xl font-bold text-primary-black mt-8 mb-4">

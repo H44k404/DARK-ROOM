@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { mockPosts } from '../../services/mockData';
+import postService from '../../services/postService';
 import { formatDate, formatNumber } from '../../utils/helpers';
 import { HiEye, HiPencil, HiTrash, HiExternalLink, HiSearch, HiFilter, HiDocumentText } from 'react-icons/hi';
 
@@ -10,27 +10,97 @@ const ManagePosts = () => {
     const [categoryFilter, setCategoryFilter] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
 
-    useEffect(() => {
-        let filtered = [...mockPosts];
-        if (categoryFilter !== 'all') {
-            filtered = filtered.filter(p => p.categoryName.toLowerCase() === categoryFilter.toLowerCase());
-        }
-        if (searchTerm) {
-            filtered = filtered.filter(p => p.title.toLowerCase().includes(searchTerm.toLowerCase()));
-        }
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [postToDelete, setPostToDelete] = useState(null);
 
-        setPosts(filtered);
+    const fetchPosts = async () => {
+        setLoading(true);
+        try {
+            const data = await postService.getPosts();
+            // Map to expected client shape
+            let mapped = data.map(p => ({
+                id: p.id,
+                title: p.title,
+                slug: p.slug,
+                publishedAt: p.publishedAt,
+                postType: p.postType,
+                categoryName: p.category?.name || 'Uncategorized',
+                viewCount: p.viewCount || 0
+            }));
+
+            // Client-side filtering
+            if (categoryFilter !== 'all') {
+                mapped = mapped.filter(p => p.categoryName.toLowerCase() === categoryFilter.toLowerCase());
+            }
+            if (searchTerm) {
+                mapped = mapped.filter(p => p.title.toLowerCase().includes(searchTerm.toLowerCase()));
+            }
+
+            setPosts(mapped);
+        } catch (err) {
+            console.error('Failed to fetch posts for ManagePosts', err);
+            setPosts([]);
+        }
         setLoading(false);
+    };
+
+    useEffect(() => {
+        fetchPosts();
     }, [categoryFilter, searchTerm]);
 
-    const handleDelete = (postId) => {
-        if (window.confirm('Are you sure you want to delete this post?')) {
-            setPosts(posts.filter(post => post.id !== postId));
+    const confirmDelete = (post) => {
+        setPostToDelete(post);
+        setDeleteModalOpen(true);
+    };
+
+    const handleDelete = async () => {
+        if (!postToDelete) return;
+        setLoading(true);
+        try {
+            await postService.deletePost(postToDelete.id);
+            await fetchPosts();
+            setDeleteModalOpen(false);
+            setPostToDelete(null);
+        } catch (err) {
+            console.error('Failed to delete post', err);
+            alert(err.message || 'Failed to delete post');
         }
+        setLoading(false);
     };
 
     return (
-        <div className="space-y-8 max-w-7xl mx-auto">
+        <div className="space-y-8 max-w-full mx-auto relative">
+            {/* Custom Delete Modal */}
+            {deleteModalOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 space-y-6 transform transition-all scale-100 animate-in zoom-in-95 duration-200">
+                        <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mx-auto text-red-600">
+                            <HiTrash className="text-2xl" />
+                        </div>
+                        <div className="text-center space-y-2">
+                            <h3 className="text-xl font-bold text-primary-black">Delete Transmission?</h3>
+                            <p className="text-sm text-gray-500">
+                                Are you sure you want to delete <span className="font-bold text-primary-black">"{postToDelete?.title}"</span>? This action cannot be undone.
+                            </p>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                            <button
+                                onClick={() => setDeleteModalOpen(false)}
+                                className="px-4 py-3 rounded-xl font-bold text-gray-600 bg-gray-50 hover:bg-gray-100 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleDelete}
+                                className="px-4 py-3 rounded-xl font-bold text-white bg-red-600 hover:bg-red-700 transition-colors shadow-lg shadow-red-500/30"
+                            >
+                                {loading ? 'Deleting...' : 'Yes, Delete'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
                     <h1 className="text-3xl font-bold text-primary-black tracking-tight">Content Library</h1>
@@ -130,11 +200,15 @@ const ManagePosts = () => {
                                                 >
                                                     <HiExternalLink className="text-lg" />
                                                 </Link>
-                                                <button className="p-2.5 text-gray-400 hover:text-blue-600 hover:bg-white rounded-xl transition-all border border-transparent hover:border-gray-100 hover:shadow-sm" title="Edit">
+                                                <Link
+                                                    to={`/admin/edit-post/${post.id}`}
+                                                    className="p-2.5 text-gray-400 hover:text-blue-600 hover:bg-white rounded-xl transition-all border border-transparent hover:border-gray-100 hover:shadow-sm"
+                                                    title="Edit"
+                                                >
                                                     <HiPencil className="text-lg" />
-                                                </button>
+                                                </Link>
                                                 <button
-                                                    onClick={() => handleDelete(post.id)}
+                                                    onClick={() => confirmDelete(post)}
                                                     className="p-2.5 text-gray-400 hover:text-red-600 hover:bg-white rounded-xl transition-all border border-transparent hover:border-gray-100 hover:shadow-sm"
                                                     title="Delete"
                                                 >

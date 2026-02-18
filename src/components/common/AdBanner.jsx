@@ -7,23 +7,45 @@ import React from 'react';
  * @param {string} className - Additional CSS classes
  */
 const AdBanner = ({ size = 'banner', className = '' }) => {
-    // Ad size configurations
+    // Ad size configurations mapping to Tailwind classes for responsive behavior
+    // Mobile first approach: Default to mobile size, then md: for desktop
     const sizeConfig = {
-        'leaderboard': { width: '970px', height: '90px', maxWidth: '100%' },
-        'banner': { width: '728px', height: '90px', maxWidth: '100%' },
-        'medium-rectangle': { width: '300px', height: '250px', maxWidth: '100%' },
-        'large-rectangle': { width: '336px', height: '280px', maxWidth: '100%' },
-        'square': { width: '300px', height: '300px', maxWidth: '100%' },
+        'leaderboard': {
+            // Mobile: 300x250 (Medium Rec is standard alternative) or scaled banner. 
+            // Plan says "swapped for Medium Rectangle". 
+            mobile: 'w-[300px] h-[250px]',
+            desktop: 'md:w-[970px] md:h-[90px]',
+            maxWidth: 'max-w-full'
+        },
+        'banner': {
+            mobile: 'w-[300px] h-[250px]',
+            desktop: 'md:w-[728px] md:h-[90px]',
+            maxWidth: 'max-w-full'
+        },
+        'medium-rectangle': {
+            mobile: 'w-[300px] h-[250px]',
+            desktop: 'md:w-[300px] md:h-[250px]',
+            maxWidth: 'max-w-full'
+        },
+        'large-rectangle': {
+            mobile: 'w-[300px] h-[250px]',
+            desktop: 'md:w-[336px] md:h-[280px]',
+            maxWidth: 'max-w-full'
+        },
+        'square': {
+            mobile: 'w-[300px] h-[300px]',
+            desktop: 'md:w-[300px] md:h-[300px]',
+            maxWidth: 'max-w-full'
+        },
     };
 
-    const currentSize = sizeConfig[size] || sizeConfig.banner;
-    const isSmallAd = size === 'medium-rectangle' || size === 'large-rectangle' || size === 'square';
+    const config = sizeConfig[size] || sizeConfig.banner;
+    const isSmallAd = size.includes('rectangle') || size === 'square';
 
     return (
         <div
             className={`ad-banner mx-auto ${className}`}
             style={{
-                maxWidth: currentSize.maxWidth,
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'center'
@@ -31,17 +53,13 @@ const AdBanner = ({ size = 'banner', className = '' }) => {
         >
             <div
                 className={`
-                    relative overflow-hidden w-full
+                    relative overflow-hidden
+                    ${config.mobile} ${config.desktop} ${config.maxWidth}
                     bg-white border border-gray-100 rounded-xl
                     hover:border-gray-200 transition-all duration-300
                     cursor-pointer group flex flex-col items-center justify-center
-                    p-6
+                    p-6 shadow-[0_2px_10px_rgba(0,0,0,0.02)]
                 `}
-                style={{
-                    height: currentSize.height,
-                    minHeight: currentSize.height,
-                    boxShadow: '0 2px 10px rgba(0,0,0,0.02)'
-                }}
             >
                 {/* Background Pattern - Subtle dots */}
                 <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{

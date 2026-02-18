@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { getLocalStorage, setLocalStorage, removeLocalStorage } from '../utils/helpers';
-import { getUserByEmail } from '../services/mockData';
+import api from '../services/api';
 
 export const AuthContext = createContext();
 
@@ -19,20 +19,18 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            // Mock login - in production, this would call an API
-            const user = getUserByEmail(email);
+            const data = await api.post('/auth/login', { email, password });
 
-            if (user && user.password === password) {
-                // Don't store password in context/local storage
-                const { password: _, ...userWithoutPassword } = user;
-                setLocalStorage('darkroom_user', userWithoutPassword);
-                setUser(userWithoutPassword);
-                return { success: true, user: userWithoutPassword };
+            if (data.token) {
+                setLocalStorage('darkroom_token', data.token);
+                setLocalStorage('darkroom_user', data);
+                setUser(data);
+                return { success: true, user: data };
             }
-
-            return { success: false, error: 'Invalid email or password' };
+            return { success: false, error: 'Login failed: No token received' };
         } catch (error) {
-            return { success: false, error: error.message };
+            console.error('Login error:', error);
+            return { success: false, error: error.message || 'Invalid email or password' };
         }
     };
 
@@ -55,7 +53,16 @@ export const AuthProvider = ({ children }) => {
 
     const logout = () => {
         removeLocalStorage('darkroom_user');
+        removeLocalStorage('darkroom_token');
         setUser(null);
+    };
+
+    const updateUser = (userData) => {
+        setUser(prev => {
+            const updated = { ...prev, ...userData };
+            setLocalStorage('darkroom_user', updated);
+            return updated;
+        });
     };
 
     const isAdmin = () => {
@@ -80,6 +87,7 @@ export const AuthProvider = ({ children }) => {
         login,
         register,
         logout,
+        updateUser,
         isAdmin,
         isSuperAdmin,
         isEditor,

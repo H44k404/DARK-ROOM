@@ -8,43 +8,40 @@ const PostCard = ({ post, featured = false }) => {
         ? 'card card-hover group cursor-pointer h-full flex flex-col'
         : 'card card-hover group cursor-pointer h-full flex flex-col';
 
+    // Use object-cover on a slightly smaller box so the image fills but is not too tall
     const imageClass = featured
-        ? 'w-full h-64 md:h-80 lg:h-96 object-cover'
-        : 'w-full h-48 md:h-56 object-cover';
+        ? 'w-full h-56 md:h-64 lg:h-72 object-cover bg-gray-100'
+        : 'w-full h-40 md:h-48 object-cover bg-gray-100';
 
     const titleClass = featured
-        ? 'text-2xl md:text-3xl lg:text-4xl font-bold text-primary-black group-hover:text-primary-gray-700 transition-colors line-clamp-3'
+        ? 'text-xl md:text-2xl lg:text-3xl font-bold text-primary-black group-hover:text-primary-gray-700 transition-colors line-clamp-3'
         : 'text-lg md:text-xl font-bold text-primary-black group-hover:text-primary-gray-700 transition-colors line-clamp-2';
 
     return (
         <Link to={`/post/${post.slug}`} className={cardClass}>
             {/* Featured Image */}
-            <div className="relative overflow-hidden">
+            <div className="relative overflow-hidden flex items-center justify-center bg-gray-100">
                 <img
                     src={post.featuredImage}
                     alt={post.title}
-                    className={`${imageClass} group-hover:scale-105 transition-transform duration-300`}
+                    className={`${imageClass} group-hover:scale-105 transition-transform duration-700 object-center`}
                     loading="lazy"
+                    style={{ width: '100%', height: '100%', maxHeight: '100%' }}
                 />
-                {/* Category Badge - Bottom Left */}
-                <div className="absolute bottom-4 left-4">
-                    <span className="category-badge shadow-lg text-base md:text-lg px-6 py-3 font-bold">{post.categoryName}</span>
-                </div>
 
-                {/* Post Type Badge - Bottom Right - Same style as category badge */}
+
+                {/* Post Type Badge - Bottom Right */}
                 {post.postType === 'video' && (
-                    <div className="absolute bottom-4 right-4">
-                        <span className="inline-block px-6 py-3 text-base md:text-lg font-bold uppercase tracking-wide bg-red-600 text-white shadow-lg flex items-center gap-2">
-                            <HiPlay className="text-xl" />
-                            VIDEO
+                    <div className="absolute bottom-3 right-3">
+                        <span className="inline-block w-8 h-8 flex items-center justify-center bg-black/50 backdrop-blur-sm text-white rounded-full border border-white/20">
+                            <HiPlay className="text-sm" />
                         </span>
                     </div>
                 )}
                 {post.postType === 'audio' && (
-                    <div className="absolute bottom-4 right-4">
-                        <span className="inline-block px-6 py-3 text-base md:text-lg font-bold uppercase tracking-wide bg-purple-600 text-white shadow-lg flex items-center gap-2">
-                            <HiVolumeUp className="text-xl" />
-                            AUDIO
+                    <div className="absolute bottom-3 right-3">
+                        <span className="inline-block w-8 h-8 flex items-center justify-center bg-purple-600/80 backdrop-blur-sm text-white rounded-full">
+                            <HiVolumeUp className="text-sm" />
                         </span>
                     </div>
                 )}
@@ -53,7 +50,7 @@ const PostCard = ({ post, featured = false }) => {
             {/* Content */}
             <div className="p-4 md:p-6 flex-1 flex flex-col">
                 {/* Title */}
-                <h3 className={titleClass}>{post.title}</h3>
+                <h3 className={`${titleClass} text-sinhala`} style={{ paddingLeft: 12, paddingRight: 12 }}>{post.title}</h3>
 
                 {/* Excerpt */}
                 {post.excerpt && (

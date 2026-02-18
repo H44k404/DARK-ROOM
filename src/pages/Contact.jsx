@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { validateEmail } from '../utils/helpers';
+import { sendContactMessage } from '../services/api';
 
 const Contact = () => {
     const [formData, setFormData] = useState({
@@ -32,7 +33,7 @@ const Contact = () => {
         }
 
         try {
-            // Mock form submission - in production, this would call an API
+            await sendContactMessage(formData);
             setStatus('success');
             setStatusMessage('Thank you for your message! We will get back to you soon.');
             setFormData({ name: '', email: '', subject: '', message: '' });
@@ -42,8 +43,9 @@ const Contact = () => {
                 setStatusMessage('');
             }, 5000);
         } catch (error) {
+            console.error('Contact form error:', error);
             setStatus('error');
-            setStatusMessage('Something went wrong. Please try again.');
+            setStatusMessage(error.message || 'Something went wrong. Please try again.');
         }
     };
 
@@ -88,6 +90,23 @@ const Contact = () => {
                     <div>
                         <h2 className="text-2xl font-bold text-primary-black mb-6">Send a Message</h2>
                         <form onSubmit={handleSubmit} className="space-y-4">
+                            {statusMessage && (
+                                <div className={`p-4 rounded-md ${status === 'success' ? 'bg-green-50 border border-green-200 text-green-700' : 'bg-red-50 border border-red-200 text-red-700'}`}>
+                                    <div className="flex items-start gap-3">
+                                        <div className={`p-1 mt-0.5 rounded-full ${status === 'success' ? 'bg-green-100' : 'bg-red-100'}`}>
+                                            {status === 'success' ? (
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                                            ) : (
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-sm mb-1">{status === 'success' ? 'Message Sent Successfully' : 'Submission Failed'}</p>
+                                            <p className="text-sm">{statusMessage}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                             <div>
                                 <label htmlFor="name" className="block text-sm font-medium text-primary-gray-700 mb-2">
                                     Name *
@@ -152,11 +171,7 @@ const Contact = () => {
                                 Send Message
                             </button>
 
-                            {statusMessage && (
-                                <p className={`text-sm ${status === 'success' ? 'text-green-600' : 'text-red-600'}`}>
-                                    {statusMessage}
-                                </p>
-                            )}
+
                         </form>
                     </div>
                 </div>

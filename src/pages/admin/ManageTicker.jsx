@@ -42,7 +42,7 @@ const ManageTicker = () => {
     if (loading) return <div className="p-8 text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest animate-pulse">Synchronizing broadcast parameters...</div>;
 
     return (
-        <div className="max-w-5xl mx-auto space-y-10">
+        <div className="max-w-full mx-auto space-y-10">
             <header className="flex items-center justify-between gap-4 border-b border-gray-100 pb-8">
                 <div className="flex items-center gap-5">
                     <div className="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center text-red-600 shadow-sm border border-red-100/50">

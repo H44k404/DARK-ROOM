@@ -5,6 +5,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import BreakingNewsTicker from '../common/BreakingNewsTicker';
 import DonationModal from '../common/DonationModal';
+import FloatingSocialSidebar from '../common/FloatingSocialSidebar';
 import { getLocalStorage } from '../../utils/helpers';
 
 const Layout = ({ children }) => {
@@ -28,7 +29,8 @@ const Layout = ({ children }) => {
 
 
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col relative">
+            <FloatingSocialSidebar />
             <Header onOpenDonation={openDonationModal} />
             <Navbar />
             <div>
