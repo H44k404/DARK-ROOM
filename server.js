@@ -70,13 +70,6 @@ app.get('/', (req, res) => {
     res.json({ message: 'Dark Room API is running secure.' });
 });
 
-// Serve frontend in production
-const distPath = path.join(__dirname, 'dist');
-app.use(express.static(distPath));
-
-// Handle React routing, return all requests to React app
-app.get('*', (req, res) => {
-    res.sendFile(path.join(distPath, 'index.html'));
-});
+// Frontend is served by Nginx in production
 
 httpServer.listen(PORT, () => console.log(`Server running on port ${PORT}`));
