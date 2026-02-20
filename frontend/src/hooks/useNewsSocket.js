@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 
-const SOCKET_URL = 'http://localhost:5000'; // Make sure this matches your backend URL
+const SOCKET_URL = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5000'; // Auto-detect in prod
 
 const useNewsSocket = (onNewArticle) => {
     const socketRef = useRef(null);
