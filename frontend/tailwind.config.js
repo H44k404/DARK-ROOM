@@ -1,5 +1,5 @@
-/** @type {import('tailwindcss').Config} */
 export default {
+    darkMode: 'class',
     content: [
         "./index.html",
         "./src/**/*.{js,ts,jsx,tsx}",
@@ -9,6 +9,7 @@ export default {
             fontFamily: {
                 sans: ['Noto Sans Sinhala', 'Inter', 'sans-serif'],
                 'serif-sinhala': ['Noto Serif Sinhala', 'serif'],
+                'abhaya': ['"Abhaya Libre"', 'serif'],
             },
             colors: {
                 primary: {

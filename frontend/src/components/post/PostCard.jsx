@@ -1,76 +1,84 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { formatDate, formatNumber } from '../../utils/helpers';
-import { HiEye, HiPlay, HiVolumeUp } from 'react-icons/hi';
+import { formatDistanceToNow } from 'date-fns';
+import { HiPlay } from 'react-icons/hi';
 
-const PostCard = ({ post, featured = false }) => {
-    const cardClass = featured
-        ? 'card card-hover group cursor-pointer h-full flex flex-col'
-        : 'card card-hover group cursor-pointer h-full flex flex-col';
+const PostCard = ({ post }) => {
+    // Helper for category badge color
+    const getBadgeStyle = (type) => {
+        const typeLower = type?.toLowerCase() || '';
+        if (['analysis', 'eyewitness'].includes(typeLower)) return { background: '#1a73e8' }; // Blue
+        if (['exclusive', 'breaking', 'live'].includes(typeLower)) return { background: '#E4002B' }; // Red
+        if (typeLower === 'video') return { background: 'rgba(0,0,0,0.8)' }; // Black opacity
+        return { background: '#FF6900' }; // Default Orange
+    };
 
-    // Use object-cover on a slightly smaller box so the image fills but is not too tall
-    const imageClass = featured
-        ? 'w-full h-56 md:h-64 lg:h-72 object-cover bg-gray-100'
-        : 'w-full h-40 md:h-48 object-cover bg-gray-100';
-
-    const titleClass = featured
-        ? 'text-xl md:text-2xl lg:text-3xl font-bold text-primary-black group-hover:text-primary-gray-700 transition-colors line-clamp-3'
-        : 'text-lg md:text-xl font-bold text-primary-black group-hover:text-primary-gray-700 transition-colors line-clamp-2';
+    // Determine badge text and style
+    // The user says "Badge on image (category label like ANALYSIS, EYEWITNESS...) comes from a 'badge' or 'tag' field"
+    // I will check for a 'badge' property, or fallback to postType if it matches, or nothing.
+    const badgeText = post.badge || post.postType; // adjusting based on available data assumption
+    const showBadge = !!badgeText;
+    const badgeStyle = getBadgeStyle(badgeText);
 
     return (
-        <Link to={`/post/${post.slug}`} className={cardClass}>
-            {/* Featured Image */}
-            <div className="relative overflow-hidden flex items-center justify-center bg-gray-100">
+        <article className="group flex flex-col h-full border-b border-[#2A2A2A] pb-[16px]">
+            <Link to={`/post/${post.slug}`} className="block overflow-hidden relative aspect-video mb-[10px] rounded-xl">
+                {/* Image with Zoom Effect */}
                 <img
                     src={post.featuredImage}
                     alt={post.title}
-                    className={`${imageClass} group-hover:scale-105 transition-transform duration-700 object-center`}
                     loading="lazy"
-                    style={{ width: '100%', height: '100%', maxHeight: '100%' }}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
 
+                {/* Badge on Image */}
+                {showBadge && (
+                    <div
+                        className="absolute bottom-0 left-0 text-white uppercase tracking-[0.5px]"
+                        style={{
+                            ...badgeStyle,
+                            fontSize: '10px',
+                            padding: '4px 8px',
+                        }}
+                    >
+                        {badgeText}
+                    </div>
+                )}
+            </Link>
 
-                {/* Post Type Badge - Bottom Right */}
-                {post.postType === 'video' && (
-                    <div className="absolute bottom-3 right-3">
-                        <span className="inline-block w-8 h-8 flex items-center justify-center bg-black/50 backdrop-blur-sm text-white rounded-full border border-white/20">
-                            <HiPlay className="text-sm" />
-                        </span>
-                    </div>
-                )}
-                {post.postType === 'audio' && (
-                    <div className="absolute bottom-3 right-3">
-                        <span className="inline-block w-8 h-8 flex items-center justify-center bg-purple-600/80 backdrop-blur-sm text-white rounded-full">
-                            <HiVolumeUp className="text-sm" />
-                        </span>
-                    </div>
-                )}
+            {/* Headline */}
+            <h3
+                className="mb-[8px] group-hover:underline decoration-primary-black underline-offset-2 text-adaptive"
+                style={{
+                    fontFamily: "'Abhaya Libre', serif",
+                    fontSize: '18px', // Increased slightly for readability with lighter weight
+                    fontWeight: '400',
+                    lineHeight: '1.4',
+                    margin: '10px 0 8px 0'
+                }}
+            >
+                <Link to={`/post/${post.slug}`}>
+                    {post.title}
+                </Link>
+            </h3>
+
+            {/* Meta Row (Time | Category) */}
+            <div className="flex items-center text-[13px] mt-auto">
+                <span className="text-primary-gray-600 dark:text-gray-500">
+                    {post.publishedAt ? formatDistanceToNow(new Date(post.publishedAt), { addSuffix: true }) : ''}
+                </span>
+                <span className="mx-[6px] text-gray-300 dark:text-gray-600">|</span>
+                <Link
+                    to={`/category/${post.categoryName?.toLowerCase()}`}
+                    className="hover:underline text-[var(--accent-orange)] font-semibold"
+                    style={{
+                        textDecoration: 'none'
+                    }}
+                >
+                    {post.categoryName || 'News'}
+                </Link>
             </div>
-
-            {/* Content */}
-            <div className="p-4 md:p-6 flex-1 flex flex-col">
-                {/* Title */}
-                <h3 className={`${titleClass} text-sinhala`} style={{ paddingLeft: 12, paddingRight: 12 }}>{post.title}</h3>
-
-                {/* Excerpt */}
-                {post.excerpt && (
-                    <p className={`mt-3 text-primary-gray-600 leading-relaxed ${featured ? 'line-clamp-3' : 'line-clamp-2'}`}>
-                        {post.excerpt}
-                    </p>
-                )}
-
-                {/* Meta Info */}
-                <div className="mt-auto pt-4 flex items-center justify-between text-sm text-primary-gray-500">
-                    <time dateTime={post.publishedAt}>
-                        {formatDate(post.publishedAt, post.language)}
-                    </time>
-                    <div className="flex items-center gap-1">
-                        <HiEye className="text-base" />
-                        <span>{formatNumber(post.viewCount)}</span>
-                    </div>
-                </div>
-            </div>
-        </Link>
+        </article>
     );
 };
 

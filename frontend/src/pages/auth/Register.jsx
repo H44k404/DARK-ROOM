@@ -58,14 +58,14 @@ const Register = () => {
         <div className="min-h-[calc(100vh-400px)] flex items-center justify-center py-12 px-4">
             <div className="max-w-md w-full">
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl md:text-4xl font-bold text-primary-black mb-2">Register</h1>
-                    <p className="text-primary-gray-600">Subscribe to our newsletter for latest news updates</p>
+                    <h1 className="text-3xl md:text-4xl font-bold text-adaptive mb-2">Register</h1>
+                    <p className="text-adaptive-secondary">Subscribe to our newsletter for the latest news updates</p>
                 </div>
 
-                <div className="card p-8">
+                <div className="card p-8 bg-adaptive-card border-adaptive shadow-sm rounded-lg">
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label htmlFor="name" className="block text-sm font-medium text-primary-gray-700 mb-2">
+                            <label htmlFor="name" className="block text-sm font-medium text-adaptive-secondary mb-2">
                                 Full Name
                             </label>
                             <input
@@ -75,13 +75,13 @@ const Register = () => {
                                 value={formData.name}
                                 onChange={handleChange}
                                 required
-                                className="input"
+                                className="input w-full px-4 py-3 rounded-md border border-adaptive bg-adaptive-input text-adaptive focus:ring-2 focus:ring-[var(--accent-red)] focus:border-transparent outline-none transition-all"
                                 placeholder="John Doe"
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-primary-gray-700 mb-2">
+                            <label htmlFor="email" className="block text-sm font-medium text-adaptive-secondary mb-2">
                                 Email Address
                             </label>
                             <input
@@ -91,13 +91,13 @@ const Register = () => {
                                 value={formData.email}
                                 onChange={handleChange}
                                 required
-                                className="input"
+                                className="input w-full px-4 py-3 rounded-md border border-adaptive bg-adaptive-input text-adaptive focus:ring-2 focus:ring-[var(--accent-red)] focus:border-transparent outline-none transition-all"
                                 placeholder="you@example.com"
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-primary-gray-700 mb-2">
+                            <label htmlFor="password" className="block text-sm font-medium text-adaptive-secondary mb-2">
                                 Password
                             </label>
                             <input
@@ -107,13 +107,13 @@ const Register = () => {
                                 value={formData.password}
                                 onChange={handleChange}
                                 required
-                                className="input"
+                                className="input w-full px-4 py-3 rounded-md border border-adaptive bg-adaptive-input text-adaptive focus:ring-2 focus:ring-[var(--accent-red)] focus:border-transparent outline-none transition-all"
                                 placeholder="••••••••"
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="confirmPassword" className="block text-sm font-medium text-primary-gray-700 mb-2">
+                            <label htmlFor="confirmPassword" className="block text-sm font-medium text-adaptive-secondary mb-2">
                                 Confirm Password
                             </label>
                             <input
@@ -123,13 +123,13 @@ const Register = () => {
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
                                 required
-                                className="input"
+                                className="input w-full px-4 py-3 rounded-md border border-adaptive bg-adaptive-input text-adaptive focus:ring-2 focus:ring-[var(--accent-red)] focus:border-transparent outline-none transition-all"
                                 placeholder="••••••••"
                             />
                         </div>
 
                         {error && (
-                            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-sm text-sm">
+                            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-md text-sm">
                                 {error}
                             </div>
                         )}
@@ -137,15 +137,15 @@ const Register = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="btn btn-primary w-full"
+                            className="w-full bg-[var(--accent-red)] hover:bg-red-700 text-white font-bold py-3 px-4 rounded-md transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider text-sm"
                         >
                             {loading ? 'Creating account...' : 'Create Account'}
                         </button>
                     </form>
 
 
-                    <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-sm">
-                        <p className="text-xs text-blue-800">
+                    <div className="mt-6 p-4 bg-adaptive-input border border-adaptive rounded-md">
+                        <p className="text-xs text-adaptive-secondary">
                             By registering, you'll receive email notifications about our latest news updates and exclusive content.
                         </p>
                     </div>

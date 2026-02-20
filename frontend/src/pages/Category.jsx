@@ -51,11 +51,11 @@ const Category = () => {
         <div className="py-8">
             <div className="container-custom">
                 {/* Category Header */}
-                <div className="mb-8 pb-6 border-b-2 border-primary-black">
-                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary-black">
+                <div className="mb-8 pb-6 border-b-2 border-primary-black dark:border-white">
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-adaptive">
                         {categoryName}
                     </h1>
-                    <p className="mt-3 text-lg text-primary-gray-600">
+                    <p className="mt-3 text-lg text-adaptive">
                         {posts.length} {posts.length === 1 ? 'article' : 'articles'}
                     </p>
                 </div>

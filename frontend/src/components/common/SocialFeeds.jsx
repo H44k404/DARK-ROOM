@@ -43,7 +43,7 @@ const SocialFeeds = ({ latestVideoId }) => {
                         <div className="text-center py-6">
                             <p className="text-gray-400 mb-4 text-sm">Watch our latest investigations and news reports.</p>
                             <a
-                                href="https://www.youtube.com/@darkroomnews"
+                                href="https://www.youtube.com/@darkroom002"
                                 target="_blank"
                                 rel="noreferrer"
                                 className="inline-flex items-center gap-2 px-6 py-2.5 bg-red-600 text-white font-medium rounded-full hover:bg-red-700 transition-colors text-sm"

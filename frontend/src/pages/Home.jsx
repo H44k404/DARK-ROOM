@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import postService from '../services/postService';
 import PostGrid from '../components/post/PostGrid';
-import AdBanner from '../components/common/AdBanner';
 import NewsHero from '../components/home/NewsHero';
 import useNewsSocket from '../hooks/useNewsSocket';
 
@@ -14,9 +13,9 @@ const Home = () => {
             // Prevent duplicates
             if (prevPosts.some(p => p.id === newPost.id)) return prevPosts;
 
-            // Add new post to start and limit to 17 (5 for Hero + 12 for Grid)
+            // Add new post to start
             const updated = [newPost, ...prevPosts];
-            return updated.slice(0, 17);
+            return updated;
         });
     }, []);
 
@@ -24,12 +23,12 @@ const Home = () => {
     useNewsSocket(handleNewPost);
 
     useEffect(() => {
-        document.title = 'Dark Room | Sri Lankan News';
+        document.title = 'Dark Room | The Whole Story';
 
         const fetchLatest = async () => {
             try {
-                // Fetch more posts to populate both Hero (5) and Grid (12)
-                const data = await postService.getPosts({ limit: 17 });
+                // Fetch a good number of posts to fill the grid
+                const data = await postService.getPosts({ limit: 50 });
                 const mapped = data.map(p => ({
                     id: p.id,
                     title: p.title,
@@ -39,7 +38,9 @@ const Home = () => {
                     postType: p.postType,
                     categoryName: p.category?.name || 'Uncategorized',
                     publishedAt: p.publishedAt,
-                    viewCount: p.viewCount || 0
+                    viewCount: p.viewCount || 0,
+                    // assume backend might not have 'badge' yet, so we default or use random for demo if needed
+                    // or just rely on postType as we did in PostCard
                 }));
                 setLatestPosts(mapped);
             } catch (err) {
@@ -50,52 +51,27 @@ const Home = () => {
         fetchLatest();
     }, []);
 
+    // Split posts for Hero (Top 2-3) and Grid (Rest)
+    // Hero needs: Main (Left+Middle) + Secondary (Right) = 2 distinct posts minimum
+    // But NewsHero logic uses posts[0] and posts[1].
+    const heroPosts = latestPosts.slice(0, 2);
+    const gridPosts = latestPosts.slice(2);
+
     return (
-        <div className="py-4 md:py-8">
-            <div className="container-custom">
-                {/* Hero Section */}
-                <section className="mb-8">
-                    <div className="text-center mb-8">
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-black mb-4">
-                            Latest News
-                        </h1>
-                        <p className="text-lg md:text-xl text-primary-gray-600 max-w-3xl mx-auto">
-                            Stay informed with the latest news from Sri Lanka and around the world
-                        </p>
-                    </div>
-                </section>
+        <div className="bg-[var(--bg-primary)] min-h-screen">
+            {/* Page Wrapper */}
+            <div className="max-w-[1280px] mx-auto px-[24px] box-border">
 
-                {/* Leaderboard Ad - Top */}
-                <section className="mb-8">
-                    <AdBanner size="leaderboard" variant="tech" />
-                </section>
-
-                {/* News Hero (Bento Grid) - Top 5 Posts */}
-                {latestPosts && latestPosts.length > 0 && (
-                    <NewsHero posts={latestPosts.slice(0, 5)} />
+                {/* News Hero Section */}
+                {heroPosts.length > 0 && (
+                    <NewsHero posts={heroPosts} />
                 )}
 
-                {/* Remaining Latest Posts - Grid */}
-                <section>
-                    {latestPosts && latestPosts.length > 5 && (
-                        <div className="mb-8">
-                            <h2 className="text-2xl font-bold text-primary-black mb-6 border-l-4 border-red-600 pl-4 text-sinhala">
-                                More Headlines
-                            </h2>
-                            <PostGrid posts={latestPosts.slice(5)} featured={false} />
-                        </div>
-                    )}
-                </section>
+                {/* News Card Grid (4 cols) with Ads */}
+                {gridPosts.length > 0 && (
+                    <PostGrid posts={gridPosts} />
+                )}
 
-                {/* Large Banner Ad - Middle */}
-                <section className="my-12">
-                    <AdBanner size="banner" variant="tourism" />
-                </section>
-
-                {/* Medium Rectangle Ad - Bottom */}
-                <section className="my-12">
-                    <AdBanner size="medium-rectangle" variant="subscription" />
-                </section>
             </div>
         </div>
     );

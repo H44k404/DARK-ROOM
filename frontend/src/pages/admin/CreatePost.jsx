@@ -12,8 +12,10 @@ const CreatePost = () => {
     const navigate = useNavigate();
     const { user, isSuperAdmin } = useAuth();
     const [categories, setCategories] = useState([]);
+    const [isSlugModified, setIsSlugModified] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
+        subHeading: '',
         slug: '',
         excerpt: '',
         content: '',
@@ -42,6 +44,7 @@ const CreatePost = () => {
                     const post = await postService.getPostById(id);
                     setFormData({
                         title: post.title,
+                        subHeading: post.subHeading || '',
                         slug: post.slug,
                         excerpt: post.excerpt || '',
                         content: post.content,
@@ -68,10 +71,15 @@ const CreatePost = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+
+        if (name === 'slug') {
+            setIsSlugModified(true);
+        }
+
         setFormData(prev => {
             const newData = { ...prev, [name]: value };
-            // Only auto-generate slug in create mode, or if slug is empty
-            if (name === 'title' && (!prev.slug || !id)) {
+            // Only auto-generate slug in create mode AND if slug hasn't been manually modified
+            if (name === 'title' && !isSlugModified && (!prev.slug || !id)) {
                 newData.slug = value.toLowerCase()
                     .replace(/\s+/g, '-')
                     .replace(/[^\p{L}\p{N}-]/gu, '')
@@ -126,6 +134,7 @@ const CreatePost = () => {
 
         const submissionData = {
             title: formData.title,
+            subHeading: formData.subHeading,
             slug: sanitizedSlug,
             excerpt: formData.excerpt,
             content: formData.content,
@@ -244,11 +253,61 @@ const CreatePost = () => {
                                     e.target.style.height = e.target.scrollHeight + 'px';
                                 }}
                             />
-                            {/* Auto-generated Slug feedback */}
-                            <div className="text-xs text-gray-400 font-mono pl-1">
-                                darkroom.lk/post/<span className="text-primary-black">{formData.slug || 'automatic-slug-generation'}</span>
+
+                            {/* Slug Input */}
+                            <div className="flex items-center gap-2 text-sm text-gray-500 font-mono bg-gray-50 p-2 rounded-md border border-gray-200 focus-within:border-black transition-colors w-full">
+                                <span className="text-gray-400 select-none">darkroom.lk/post/</span>
+                                <input
+                                    type="text"
+                                    name="slug"
+                                    value={formData.slug}
+                                    onChange={handleChange}
+                                    onBlur={() => {
+                                        const sanitized = formData.slug.toLowerCase().trim()
+                                            .replace(/\s+/g, '-')
+                                            .replace(/[^\p{L}\p{N}-]/gu, '')
+                                            .replace(/-+/g, '-')
+                                            .replace(/^-+|-+$/g, '');
+                                        setFormData(prev => ({ ...prev, slug: sanitized }));
+                                    }}
+                                    className="bg-transparent border-none outline-none flex-1 text-primary-black placeholder-gray-400 p-0 focus:ring-0"
+                                    placeholder="url-slug"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        // Regenerate slug from title
+                                        const newSlug = formData.title.toLowerCase()
+                                            .replace(/\s+/g, '-')
+                                            .replace(/[^\p{L}\p{N}-]/gu, '')
+                                            .replace(/-+/g, '-')
+                                            .replace(/^-+|-+$/g, '');
+                                        setFormData(prev => ({ ...prev, slug: newSlug }));
+                                        // Reset modified flag if user explicitly regenerates
+                                        // (implied: they want it to match title again)
+                                    }}
+                                    className="text-xs text-gray-400 hover:text-primary-black underline"
+                                    title="Regenerate from title"
+                                >
+                                    Reset
+                                </button>
                             </div>
-                            {/* Hidden slug input for manual override if needed (can be exposed in settings) */}
+                        </div>
+
+                        {/* Subheading Input */}
+                        <div className="space-y-2">
+                            <textarea
+                                name="subHeading"
+                                value={formData.subHeading}
+                                onChange={handleChange}
+                                rows="2"
+                                className="w-full text-xl md:text-2xl font-medium tracking-tight text-gray-600 border-none bg-transparent placeholder-gray-300 focus:ring-0 px-0 resize-none overflow-hidden leading-tight"
+                                placeholder="Enter Subheading (Optional)..."
+                                onInput={(e) => {
+                                    e.target.style.height = 'auto';
+                                    e.target.style.height = e.target.scrollHeight + 'px';
+                                }}
+                            />
                         </div>
 
                         {/* Formatting Toolbar wrapper for sticky effect could go here */}
@@ -369,6 +428,12 @@ const CreatePost = () => {
                             <h1 className="text-3xl md:text-3xl lg:text-4xl font-bold text-primary-black mb-6 !leading-[1.8] text-sinhala">
                                 {formData.title || 'Your Headline Here'}
                             </h1>
+                            {/* Subheading Preview */}
+                            {formData.subHeading && (
+                                <h2 className="text-xl md:text-2xl font-medium text-gray-600 mb-6 !leading-[1.6]">
+                                    {formData.subHeading}
+                                </h2>
+                            )}
 
                             {/* Meta Info Simulation */}
                             <div className="flex items-center gap-4 text-xs text-gray-500 mb-6 pb-6 border-b border-gray-100 font-sans">

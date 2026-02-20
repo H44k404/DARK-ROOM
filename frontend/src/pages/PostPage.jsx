@@ -90,7 +90,7 @@ const PostPage = () => {
                 {/* Two Column Layout - Content and Sidebar */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
                     {/* Main Content - Left Column (2/3 width) */}
-                    <div className="lg:col-span-2">
+                    <div className="lg:col-span-2 min-w-0 max-w-full lg:pr-4">
                         {/* Category Badge */}
                         {/* Category Badge */}
                         {post.categoryName && (
@@ -100,22 +100,22 @@ const PostPage = () => {
                         )}
 
                         {/* Title */}
-                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary-black mb-6 !leading-[1.8] text-sinhala">
+                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-adaptive mb-6 !leading-[1.8] text-sinhala">
                             {post.title}
                         </h1>
 
                         {/* Meta Info - New Design */}
-                        <div className="flex flex-wrap items-center gap-3 text-sm text-primary-gray-800 mb-6 pb-6 border-b border-primary-gray-200 font-sans tracking-wide">
+                        <div className="flex flex-wrap items-center gap-3 text-sm text-gray-800 dark:text-gray-300 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700 font-sans tracking-wide">
                             <div className="flex items-center gap-1">
                                 <span className="font-bold uppercase text-xs tracking-wider">AUTHOR:</span>
                                 <span className="font-bold">{post.author?.name || post.author?.username || 'Editor'}</span>
                             </div>
-                            <span className="text-gray-300">|</span>
-                            <time dateTime={post.publishedAt} className="text-primary-gray-600">
+                            <span className="text-gray-300 dark:text-gray-600">|</span>
+                            <time dateTime={post.publishedAt} className="text-gray-600 dark:text-gray-400">
                                 {new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                             </time>
-                            <span className="text-gray-300">|</span>
-                            <span className="text-primary-gray-600">
+                            <span className="text-gray-300 dark:text-gray-600">|</span>
+                            <span className="text-gray-600 dark:text-gray-400">
                                 {(() => {
                                     const html = post.content || '';
                                     const text = html.replace(/<[^>]*>?/gm, '');
@@ -145,16 +145,14 @@ const PostPage = () => {
                             </div>
                         )}
 
-
-
                         {/* Share Buttons */}
-                        <div className="mb-8 pb-8 border-b border-primary-gray-200">
+                        <div className="mb-8 pb-8 border-b border-gray-200 dark:border-gray-700">
                             <ShareButtons url={currentUrl} title={post.title} />
                         </div>
 
                         {/* Post Content */}
                         <div
-                            className="post-content post-content-serif mb-8 text-sinhala break-words"
+                            className="post-content post-content-serif mb-8 text-sinhala text-adaptive"
                             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
                         />
 
@@ -171,7 +169,7 @@ const PostPage = () => {
                         </div>
 
                         {/* Share Buttons (Bottom) */}
-                        <div className="mb-12 pt-8 border-t border-primary-gray-200">
+                        <div className="mb-12 pt-8 border-t border-primary-gray-200 dark:border-gray-700">
                             <ShareButtons url={currentUrl} title={post.title} />
                         </div>
                     </div>
@@ -179,21 +177,21 @@ const PostPage = () => {
                     {/* Sidebar - Right Column (1/3 width) */}
                     <aside className="sticky top-24">
                         <div className="flex items-center justify-between mb-8">
-                            <h3 className="text-2xl md:text-3xl font-bold text-primary-black font-serif">
+                            <h3 className="text-2xl md:text-3xl font-bold text-primary-black dark:text-white font-serif">
                                 You might also like
                             </h3>
                         </div>
 
                         <div className="flex flex-col gap-6">
+                            {/* Social Feeds */}
+                            <div className="w-full">
+                                <SocialFeeds latestVideoId={post.videoId} />
+                            </div>
+
                             {/* Ad Section */}
                             <div className="flex flex-col gap-6">
                                 <AdBanner size="medium-rectangle" variant="subscription" />
                                 <AdBanner size="medium-rectangle" variant="education" />
-                            </div>
-
-                            {/* Social Feeds */}
-                            <div className="w-full">
-                                <SocialFeeds latestVideoId={post.videoId} />
                             </div>
                         </div>
                     </aside>
@@ -207,7 +205,7 @@ const PostPage = () => {
                 {/* Related Posts */}
                 {relatedPosts.length > 0 && (
                     <div className="mt-16">
-                        <h2 className="text-2xl md:text-3xl font-bold text-primary-black mb-6">
+                        <h2 className="text-2xl md:text-3xl font-bold text-primary-black dark:text-white mb-6">
                             Related Articles
                         </h2>
                         <PostGrid posts={relatedPosts} />

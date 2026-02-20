@@ -79,7 +79,7 @@ const AdminLogin = () => {
                                 value={formData.email}
                                 onChange={handleChange}
                                 required
-                                className="input"
+                                className="input text-primary-black"
                                 placeholder="admin@darkroom.lk"
                             />
                         </div>
@@ -95,7 +95,7 @@ const AdminLogin = () => {
                                 value={formData.password}
                                 onChange={handleChange}
                                 required
-                                className="input"
+                                className="input text-primary-black"
                                 placeholder="••••••••"
                             />
                         </div>
