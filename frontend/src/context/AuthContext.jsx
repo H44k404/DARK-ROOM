@@ -9,12 +9,29 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Check if user is logged in on mount
-        const savedUser = getLocalStorage('darkroom_user');
-        if (savedUser) {
-            setUser(savedUser);
-        }
-        setLoading(false);
+        const initAuth = async () => {
+            const savedUser = getLocalStorage('darkroom_user');
+            const token = getLocalStorage('darkroom_token');
+
+            if (savedUser && token) {
+                setUser(savedUser); // Optimistic update
+                try {
+                    // Verify token and get fresh user data
+                    const freshUser = await api.get('/auth/me');
+                    // Merge with existing user data to keep token if it's stored there
+                    const mergedUser = { ...savedUser, ...freshUser };
+                    setUser(mergedUser);
+                    setLocalStorage('darkroom_user', mergedUser);
+                } catch (error) {
+                    console.error('Session validation failed:', error);
+                    // Optional: Logout if token is invalid
+                    // logout(); 
+                }
+            }
+            setLoading(false);
+        };
+
+        initAuth();
     }, []);
 
     const login = async (email, password) => {

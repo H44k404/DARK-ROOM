@@ -54,6 +54,8 @@ const loginUser = async (req, res) => {
                 username: user.username,
                 email: user.email,
                 role: user.role,
+                name: user.name,
+                profileImage: user.profileImage,
                 token: generateToken(user.id),
             });
         } else {
@@ -115,6 +117,8 @@ const registerUser = async (req, res) => {
                 username: user.username,
                 email: user.email,
                 role: user.role,
+                name: user.name,
+                profileImage: user.profileImage,
                 token: generateToken(user.id)
             });
         } else {
@@ -135,6 +139,8 @@ const getMe = async (req, res) => {
             username: req.user.username,
             email: req.user.email,
             role: req.user.role,
+            name: req.user.name,
+            profileImage: req.user.profileImage,
         });
     } else {
         res.status(404).json({ message: 'User not found' });

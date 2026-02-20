@@ -146,10 +146,10 @@ const ManagePosts = () => {
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-gray-50/50 border-b border-gray-50">
-                                <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-gray-400">Transmission Details</th>
-                                <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-gray-400">Channel</th>
-                                <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-gray-400">Metric (Views)</th>
-                                <th className="px-8 py-5 text-right text-[10px] font-bold uppercase tracking-widest text-gray-400">Actions</th>
+                                <th className="px-8 py-5 text-xs font-bold uppercase tracking-widest text-gray-400">Transmission Details</th>
+                                <th className="px-8 py-5 text-xs font-bold uppercase tracking-widest text-gray-400">Channel</th>
+                                <th className="px-8 py-5 text-xs font-bold uppercase tracking-widest text-gray-400">Metric (Views)</th>
+                                <th className="px-8 py-5 text-right text-xs font-bold uppercase tracking-widest text-gray-400">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-50">
@@ -169,10 +169,10 @@ const ManagePosts = () => {
                                     <tr key={post.id} className="hover:bg-gray-50/50 transition-colors group">
                                         <td className="px-8 py-6">
                                             <div className="flex flex-col gap-1">
-                                                <h3 className="font-bold text-primary-black text-sm tracking-tight group-hover:text-blue-600 transition-colors">
+                                                <h3 className="font-bold text-primary-black text-lg tracking-tight group-hover:text-blue-600 transition-colors">
                                                     {post.title}
                                                 </h3>
-                                                <div className="flex items-center gap-3 text-[10px] font-bold text-gray-400 uppercase tracking-tighter">
+                                                <div className="flex items-center gap-3 text-xs font-bold text-gray-400 uppercase tracking-tighter">
                                                     <span>{formatDate(post.publishedAt)}</span>
                                                     <span className="w-1 h-1 rounded-full bg-gray-300"></span>
                                                     <span>{post.postType}</span>
@@ -180,12 +180,12 @@ const ManagePosts = () => {
                                             </div>
                                         </td>
                                         <td className="px-8 py-6">
-                                            <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-lg bg-blue-50 text-blue-600 border border-blue-100/50">
+                                            <span className="px-3 py-1 text-xs font-bold uppercase tracking-widest rounded-lg bg-blue-50 text-blue-600 border border-blue-100/50">
                                                 {post.categoryName}
                                             </span>
                                         </td>
                                         <td className="px-8 py-6">
-                                            <div className="flex items-center gap-2 text-xs font-bold text-gray-600 tabular-nums">
+                                            <div className="flex items-center gap-2 text-sm font-bold text-gray-600 tabular-nums">
                                                 <HiEye className="text-lg text-gray-300" />
                                                 <span>{formatNumber(post.viewCount)}</span>
                                             </div>
@@ -223,12 +223,12 @@ const ManagePosts = () => {
                     </table>
                 </div>
                 <div className="px-8 py-6 bg-gray-50/50 border-t border-gray-50 flex items-center justify-between">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
                         Showing {posts.length} Active Transmissions
                     </p>
                     <div className="flex gap-2">
-                        <button className="px-4 py-2 bg-white border border-gray-100 rounded-xl text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-primary-black transition-all shadow-sm disabled:opacity-50" disabled>Previous</button>
-                        <button className="px-4 py-2 bg-white border border-gray-100 rounded-xl text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-primary-black transition-all shadow-sm disabled:opacity-50" disabled>Next</button>
+                        <button className="px-4 py-2 bg-white border border-gray-100 rounded-xl text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-primary-black transition-all shadow-sm disabled:opacity-50" disabled>Previous</button>
+                        <button className="px-4 py-2 bg-white border border-gray-100 rounded-xl text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-primary-black transition-all shadow-sm disabled:opacity-50" disabled>Next</button>
                     </div>
                 </div>
             </div>
